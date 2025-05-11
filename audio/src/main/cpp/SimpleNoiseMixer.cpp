@@ -2,6 +2,7 @@
 // Created by Casey Idzikowski on 5/11/25.
 //
 
+#include <cmath>
 #include <cstdlib>
 
 static const char *TAG = "SimpleNoiseMixer";
@@ -45,6 +46,15 @@ oboe::Result SimpleNoiseMixer::close() {
 
 // region private callbacks
 
+constexpr float kFrequency = 440.0f;         // A4 sine wave
+constexpr int kSampleRate = 48000;
+constexpr int kChannelCount = 1;             // Mono
+constexpr float kSineGain = 0.6f;
+constexpr float kNoiseGain = 0.3f;
+
+float phase = 0.0f;
+const float twoPi = 2.0f * static_cast<float>(M_PI);
+
 DataCallbackResult
 SimpleNoiseMixer::OboeDataCallback::onAudioReady(
         AudioStream *audioStream,
@@ -56,10 +66,20 @@ SimpleNoiseMixer::OboeDataCallback::onAudioReady(
 
     int numSamples = numFrames * kChannelCount;
 
+    float phaseIncrement = twoPi * kFrequency / kSampleRate;
+
     for (int i = 0; i < numSamples; i++) {
+        // generate the sine wave
+        float sine = sinf(phase) * kSineGain;
+        phase += phaseIncrement;
+
+        if(phase > twoPi) phase -= twoPi;
+
         // drand48() returns a random number between 0.0 and 1.0.
         // Center and scale it to a reasonable value.
-        *output++ = static_cast<float>((drand48() - 0.5) * 0.6);
+        float noise = static_cast<float>((drand48() - 0.5) * 0.6) * kNoiseGain;
+
+        *output++ = sine + noise;
     }
     return DataCallbackResult::Continue;
 }
