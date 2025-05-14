@@ -4,6 +4,7 @@
 static const char *TAG = "AudioPlayer";
 
 #include "SimpleNoiseMixer.h"
+#include "sounds.cpp"
 #include <android/log.h>
 
 #ifdef __cplusplus
@@ -40,3 +41,20 @@ Java_com_application_audio_AudioPlayer_stopPlayer(JNIEnv *env, jobject thiz) {
 #ifdef __cplusplus
 }
 #endif
+extern "C"
+JNIEXPORT jint JNICALL
+Java_com_application_audio_AudioPlayer_initializeSoundSources(JNIEnv *env, jobject thiz) {
+    WhiteNoiseSoundSource whiteNoiseSoundSource = WhiteNoiseSoundSource(0.5f, "White Noise");
+    SineWaveSoundSource sineWaveSoundSource = SineWaveSoundSource(0.5f, "Sine Wave");
+
+    mixer.addSoundSource(std::make_shared<WhiteNoiseSoundSource>(whiteNoiseSoundSource));
+    mixer.addSoundSource(std::make_shared<SineWaveSoundSource>(sineWaveSoundSource));
+
+    return static_cast<jint>(Result::OK);
+}
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_application_audio_AudioPlayer_updateSoundSourceVolume(JNIEnv *env, jobject thiz, jint id,
+                                                               jfloat volume) {
+    mixer.updateSoundSourceVolume(static_cast<SoundDefinitions::SoundSourceType>(id), volume);
+}

@@ -53,7 +53,7 @@ android {
 
 dependencies {
     implementation(project(":audio"))
-
+    implementation(libs.androidx.material.icons.extended)
     implementation(libs.oboe)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
