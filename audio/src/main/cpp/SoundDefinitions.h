@@ -14,7 +14,10 @@ namespace SoundDefinitions {
      */
     enum class SoundSourceType {
         SINE_WAVE = 0,
-        WHITE_NOISE = 1
+        WHITE_NOISE = 1,
+        WIND = 2,
+        RAIN = 3,
+        CAMPFIRE = 4
     };
 }
 

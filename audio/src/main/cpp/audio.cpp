@@ -44,11 +44,17 @@ Java_com_application_audio_AudioPlayer_stopPlayer(JNIEnv *env, jobject thiz) {
 extern "C"
 JNIEXPORT jint JNICALL
 Java_com_application_audio_AudioPlayer_initializeSoundSources(JNIEnv *env, jobject thiz) {
-    WhiteNoiseSoundSource whiteNoiseSoundSource = WhiteNoiseSoundSource(0.5f, "White Noise");
-    SineWaveSoundSource sineWaveSoundSource = SineWaveSoundSource(0.5f, "Sine Wave");
+    WhiteNoiseSoundSource whiteNoiseSoundSource = WhiteNoiseSoundSource(0.0f, "White Noise");
+    SineWaveSoundSource sineWaveSoundSource = SineWaveSoundSource(0.0f, "Sine Wave");
+    WindSoundSource windSoundSource = WindSoundSource(0.0f, "Wind");
+    RainSoundSource rainSoundSource = RainSoundSource(0.0f, "Rain");
+    CampfireSoundSource campfireSoundSource = CampfireSoundSource(0.0f, "Campfire");
 
     mixer.addSoundSource(std::make_shared<WhiteNoiseSoundSource>(whiteNoiseSoundSource));
     mixer.addSoundSource(std::make_shared<SineWaveSoundSource>(sineWaveSoundSource));
+    mixer.addSoundSource(std::make_shared<WindSoundSource>(windSoundSource));
+    mixer.addSoundSource(std::make_shared<RainSoundSource>(rainSoundSource));
+    mixer.addSoundSource(std::make_shared<CampfireSoundSource>(campfireSoundSource));
 
     return static_cast<jint>(Result::OK);
 }
