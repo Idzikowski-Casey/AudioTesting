@@ -100,7 +100,7 @@ public:
 private:
 
     float makeWind() {
-        return lowPassFilter.process(CommonSounds::whiteNoise());
+        return lowPassFilter.process(CommonSounds::whiteNoise() * 0.4f);
     }
 
     LowPassFilter lowPassFilter{0.05f};
@@ -134,7 +134,7 @@ private:
      */
     static float makeRain() {
         float hiss = CommonSounds::whiteNoise() * 0.2f;
-        float droplet = (rand() % 2000 == 0) ? 1.0f : 0.0f;
+        float droplet = (rand() % 1600 == 0) ? 1.0f : 0.0f;
         return CommonSounds::clampf(hiss + droplet, -1.0f, 1.0f);
     }
 
@@ -165,11 +165,11 @@ private:
         float base = CommonSounds::whiteNoise() * 0.03f;
 
         if(--crackleCountdown <= 0) {
-            crackleCountdown = rand() % 2000 + 500;
+            crackleCountdown = rand() % 1000 + 400;
             crackleBurst = (CommonSounds::whiteNoise() + 1.0f) * 0.5f;
         }
         float crackle = crackleBurst * CommonSounds::whiteNoise();
-        crackleBurst *= 0.98f; // crackle burst decay
+        crackleBurst *= 0.97f; // crackle burst decay
 
         return CommonSounds::clampf(base + crackle, -1.0f, 1.0f);
     }
