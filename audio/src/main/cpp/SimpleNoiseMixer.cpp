@@ -78,6 +78,7 @@ SimpleNoiseMixer::OboeDataCallback::onAudioReady(
 
     int numSamples = numFrames * kChannelCount;
 
+    // zero the buffer before mixing new samples
     std::fill(output, output + numSamples, 0.0f);
 
     if(!mParent) {
