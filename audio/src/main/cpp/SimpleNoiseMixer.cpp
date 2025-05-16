@@ -10,7 +10,7 @@ static const char *TAG = "SimpleNoiseMixer";
 #include <android/log.h>
 
 #include "SimpleNoiseMixer.h"
-#include "sounds.cpp"
+#include "sources/CampfireSoundSource.cpp"
 
 using namespace oboe;
 

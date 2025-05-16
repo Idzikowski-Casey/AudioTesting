@@ -3,6 +3,7 @@
 //
 
 #include <cmath>
+#pragma once
 
 // region sound helpers
 

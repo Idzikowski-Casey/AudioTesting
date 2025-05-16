@@ -6,7 +6,7 @@
 #define AUDIOTESTING_SIMPLENOISEMIXER_H
 
 #include "oboe/Oboe.h"
-#include "SoundSource.h"
+#include "sources/SoundSource.h"
 #include "map"
 
 /**

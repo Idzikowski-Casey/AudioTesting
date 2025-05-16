@@ -4,7 +4,11 @@
 static const char *TAG = "AudioPlayer";
 
 #include "SimpleNoiseMixer.h"
-#include "sounds.cpp"
+#include "sources/CampfireSoundSource.cpp"
+#include "sources/SineWaveSoundSource.cpp"
+#include "sources/WhiteNoiseSoundSource.cpp"
+#include "sources/WindSoundSource.cpp"
+#include "sources/RainSoundSource.cpp"
 #include <android/log.h>
 
 #ifdef __cplusplus
