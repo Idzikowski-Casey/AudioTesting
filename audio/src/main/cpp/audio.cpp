@@ -17,8 +17,16 @@ extern "C" {
 
 using namespace oboe;
 
+// The SimpleNoiseMixer for the app
 static SimpleNoiseMixer mixer;
 
+/**
+ * @brief A native method that attemps to open the oboe stream and request the start of the stream.
+ *
+ * @param env
+ * @param thiz
+ * @return Oboe::Result
+ */
 JNIEXPORT jint JNICALL
 Java_com_application_audio_AudioPlayer_startPlayer(JNIEnv *env, jobject thiz) {
     __android_log_print(ANDROID_LOG_INFO, TAG, "%s", __func__);
@@ -31,7 +39,13 @@ Java_com_application_audio_AudioPlayer_startPlayer(JNIEnv *env, jobject thiz) {
     return static_cast<jint>(result);
 }
 
-
+/**
+ * @brief A native method that attempts to stop and close the oboe stream.
+ *
+ * @param env
+ * @param thiz
+ * @return Oboe::Result
+ */
 JNIEXPORT jint JNICALL
 Java_com_application_audio_AudioPlayer_stopPlayer(JNIEnv *env, jobject thiz) {
     __android_log_print(ANDROID_LOG_INFO, TAG, "%s", __func__);
@@ -42,10 +56,13 @@ Java_com_application_audio_AudioPlayer_stopPlayer(JNIEnv *env, jobject thiz) {
     return static_cast<jint>((result1 != Result::OK) ? result1 : result2);
 }
 
-#ifdef __cplusplus
-}
-#endif
-extern "C"
+/**
+ * @brief A native method that attempts to initialize the sound sources.
+ *
+ * @param env
+ * @param thiz
+ * @return
+ */
 JNIEXPORT jint JNICALL
 Java_com_application_audio_AudioPlayer_initializeSoundSources(JNIEnv *env, jobject thiz) {
     WhiteNoiseSoundSource whiteNoiseSoundSource = WhiteNoiseSoundSource(0.0f, "White Noise");
@@ -62,9 +79,21 @@ Java_com_application_audio_AudioPlayer_initializeSoundSources(JNIEnv *env, jobje
 
     return static_cast<jint>(Result::OK);
 }
-extern "C"
+
+/**
+ * A native method that updates the volume of a sound source.
+ *
+ * @param env
+ * @param thiz
+ * @param id The id of the sound source to update.
+ * @param volume The new volume of the sound source.
+ */
 JNIEXPORT void JNICALL
 Java_com_application_audio_AudioPlayer_updateSoundSourceVolume(JNIEnv *env, jobject thiz, jint id,
                                                                jfloat volume) {
     mixer.updateSoundSourceVolume(static_cast<SoundDefinitions::SoundSourceType>(id), volume);
 }
+
+#ifdef __cplusplus
+}
+#endif

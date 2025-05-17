@@ -12,7 +12,7 @@
 /**
  * A class interface for simple audio mixing using Oboe
  */
-class SimpleNoiseMixer : public std::enable_shared_from_this<SimpleNoiseMixer> {
+class SimpleNoiseMixer {
 public:
 
     // Oboe functions
