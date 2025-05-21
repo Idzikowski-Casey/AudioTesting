@@ -11,6 +11,8 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material.icons.filled.PlayArrow
@@ -23,6 +25,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.application.audio.AudioPlayer
 import com.application.audio.PlayerState
@@ -51,8 +54,15 @@ class MainActivity : ComponentActivity() {
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Text(
+                            modifier = Modifier.padding(
+                                start = 32.dp,
+                                end = 32.dp,
+                                top = 32.dp,
+                                bottom = 0.dp
+                            ),
                             text = "Audio Testing with Oboe",
-                            style = MaterialTheme.typography.headlineLarge
+                            style = MaterialTheme.typography.headlineLarge,
+                            textAlign = TextAlign.Center
                         )
                         Row {
                             val playerState = audioPlayer.playerState.collectAsState()
@@ -78,13 +88,18 @@ class MainActivity : ComponentActivity() {
                                 )
                             }
                         }
-                        Column(
+
+                        val soundSources by audioPlayer.soundSources.collectAsState()
+
+
+                        LazyColumn(
                             Modifier.padding(16.dp),
                             verticalArrangement = Arrangement.spacedBy(16.dp)
                         ) {
-                            val soundSources by audioPlayer.soundSources.collectAsState()
-
-                            soundSources.forEach { (id, source) ->
+                            items(
+                                items = soundSources.values.toList(),
+                                key = { it.id }
+                            ) { source ->
                                 AudioSlider(
                                     AudioSliderData(
                                         name = source.name,
