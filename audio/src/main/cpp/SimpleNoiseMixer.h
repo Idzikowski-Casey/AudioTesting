@@ -45,11 +45,11 @@ public:
 
     // region Sound Sources
 
-    void addSoundSource(std::shared_ptr<SoundSource> soundSource);
+    oboe::Result addSoundSource(std::string id, std::shared_ptr<SoundSource> soundSource);
 
-    void updateSoundSourceVolume(SoundDefinitions::SoundSourceType type, float volume);
+    oboe::Result updateSoundSourceVolume(std::string id, float volume);
 
-    void removeSoundSource(SoundDefinitions::SoundSourceType type);
+    oboe::Result removeSoundSource(std::string id);
 
     // endregion
 
@@ -89,7 +89,7 @@ private:
     static constexpr int kChannelCount = 2;
 
     // Sound Sources
-    std::unordered_map<SoundDefinitions::SoundSourceType, std::shared_ptr<SoundSource>> soundSources;
+    std::unordered_map<std::string, std::shared_ptr<SoundSource>> soundSources;
 
 };
 

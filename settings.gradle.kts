@@ -22,3 +22,4 @@ dependencyResolutionManagement {
 rootProject.name = "AudioTesting"
 include(":app")
 include(":audio")
+include(":database")

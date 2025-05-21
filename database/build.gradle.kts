@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace = "com.application.audio"
+    namespace = "com.application.database"
     compileSdk = 35
 
     defaultConfig {
@@ -12,12 +12,6 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
-        externalNativeBuild {
-            cmake {
-                arguments("-DANDROID_STL=c++_shared")
-                cppFlags("")
-            }
-        }
     }
 
     buildTypes {
@@ -29,12 +23,6 @@ android {
             )
         }
     }
-    externalNativeBuild {
-        cmake {
-            path("src/main/cpp/CMakeLists.txt")
-            version = "3.22.1"
-        }
-    }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
@@ -42,14 +30,10 @@ android {
     kotlinOptions {
         jvmTarget = "11"
     }
-    buildFeatures {
-        prefab = true
-    }
 }
 
 dependencies {
-    implementation(project(":database"))
-    implementation(libs.oboe)
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)

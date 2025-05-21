@@ -1,6 +1,9 @@
 package com.application.audio
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
+import com.application.database.SoundSource
+import com.application.database.SoundSourceData
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -13,25 +16,39 @@ class AudioPlayer(
     private val _playerState = MutableStateFlow<PlayerState>(PlayerState.NoResultYet)
     val playerState = _playerState.asStateFlow()
 
-    private val _soundSources = MutableStateFlow<Map<SoundSourceName, SoundSource>>(InitialState)
-
-    init {
-        viewModelScope.launch {
-            _soundSources.collect {
-                for (soundSource in it.values) {
-                    updateSoundSourceVolume(soundSource.name.id, soundSource.volume)
-                }
-            }
-        }
-    }
+    private val _soundSources =
+        MutableStateFlow<Map<String, SoundSource>>(SoundSourceData.associateBy { it.id })
 
     val soundSources = _soundSources.asStateFlow()
 
     // region public methods
 
-    fun initializeSources() {
+    fun initializeSources(context: Context) {
+        val fileHelper = FileHelper()
+
         viewModelScope.launch {
-            initializeSoundSources()
+            SoundSourceData.forEach { soundSource ->
+                if (soundSource.filename != null) {
+                    // try and get buffer from file
+                    val sharedBuffer = fileHelper.readWavAsFloatArray(context, soundSource.filename)
+                    sharedBuffer?.let { buffer ->
+                        addGenericBufferSoundSource(
+                            soundSource.id,
+                            soundSource.volume,
+                            buffer,
+                            soundSource.name
+                        )
+                    }
+                } else {
+                    // its a native sound source
+                    addSoundSource(
+                        soundSource.id,
+                        soundSource.type.id,
+                        soundSource.volume,
+                        soundSource.name
+                    )
+                }
+            }
         }
     }
 
@@ -62,9 +79,17 @@ class AudioPlayer(
         setPlaybackEnabled(false)
     }
 
-    fun mutateSoundSource(soundSource: SoundSource) {
-        _soundSources.update {
-            it.plus(soundSource.name to soundSource)
+    fun setSoundSourceVolume(id: String, volume: Float) {
+        val currentSource = _soundSources.value[id] ?: return
+        viewModelScope.launch {
+            val result = updateSoundSourceVolume(id, volume)
+
+            if (result == 0) {
+                // A OKAY
+                _soundSources.update {
+                    it.plus(id to currentSource.copy(volume = volume))
+                }
+            }
         }
     }
 
@@ -79,8 +104,20 @@ class AudioPlayer(
 
     private external fun startPlayer(): Int
     private external fun stopPlayer(): Int
-    private external fun initializeSoundSources(): Int
-    private external fun updateSoundSourceVolume(id: Int, volume: Float)
+    private external fun updateSoundSourceVolume(id: String, volume: Float): Int
+    private external fun addSoundSource(
+        id: String,
+        type: Int,
+        volume: Float,
+        displayName: String
+    ): Int
+
+    private external fun addGenericBufferSoundSource(
+        id: String,
+        volume: Float,
+        buffer: FloatArray,
+        displayName: String
+    ): Int
 
     // end region
 
