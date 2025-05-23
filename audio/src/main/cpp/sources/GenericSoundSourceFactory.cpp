@@ -12,11 +12,23 @@
 #include "RainSoundSource.cpp"
 #include "GenericBufferSoundSource.cpp"
 
-class GenericBufferSoundSourceFactory {
+/**
+ * A factory class for creating sound sources. Can create either a generic buffer sound source from
+ * a predefined buffer or a runtime sound source given an integer value that maps to a SoundSource
+ * enum.
+ */
+class GenericSoundSourceFactory {
 public:
-    GenericBufferSoundSourceFactory() = default;
+    GenericSoundSourceFactory() = default;
 
-    static std::shared_ptr<GenericBufferSoundSource> createSoundSource(
+    /**
+     * @brief Create a generic buffer sound source from a predefined buffer.
+     * @param buffer The buffer to be used for the sound source.
+     * @param volume The initial volume of the sound source.
+     * @param displayName the display name of the sound source.
+     * @return std::shared_ptr<GenericBufferSoundSource>
+     */
+    static std::shared_ptr<SoundSource> createSoundSource(
             std::shared_ptr<const std::vector<float>> buffer,
             float volume,
             std::string displayName
@@ -24,6 +36,13 @@ public:
         return std::make_shared<GenericBufferSoundSource>(buffer, volume, displayName);
     }
 
+    /**
+     * @brief Create a runtime sound source from an integer value.
+     * @param type the integer value that maps to a SoundSource enum.
+     * @param volume the initial volume of the soundsource
+     * @param displayName the display name of the sound source
+     * @return std::shared_ptr<SoundSource>
+     */
     static std::shared_ptr<SoundSource> createSoundSource(
             int type,
             float volume,

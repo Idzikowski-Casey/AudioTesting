@@ -45,10 +45,27 @@ public:
 
     // region Sound Sources
 
+    /**
+     * @brief Add a pointer to a sound source to the sound source map
+     * @param id Unqiue identifier for this soundSource.
+     * @param soundSource The pointer to the soundSource
+     * @return Oboe::Result
+     */
     oboe::Result addSoundSource(std::string id, std::shared_ptr<SoundSource> soundSource);
 
+    /**
+     * @brief Update the volume of a sound source
+     * @param id Unqiue identifier for this soundSource.
+     * @param volume
+     * @return Oboe::Result
+     */
     oboe::Result updateSoundSourceVolume(std::string id, float volume);
 
+    /**
+     * @brief Remove a sound source from the sound source map
+     * @param id Unqiue identifier for this soundSource.
+     * @return Oboe::Result
+     */
     oboe::Result removeSoundSource(std::string id);
 
     // endregion

@@ -17,7 +17,7 @@ class AudioPlayer(
     val playerState = _playerState.asStateFlow()
 
     private val _soundSources =
-        MutableStateFlow<Map<String, SoundSource>>(SoundSourceData.associateBy { it.id })
+        MutableStateFlow<Map<String, SoundSource>>(emptyMap())
 
     val soundSources = _soundSources.asStateFlow()
 
@@ -28,7 +28,7 @@ class AudioPlayer(
 
         viewModelScope.launch {
             SoundSourceData.forEach { soundSource ->
-                if (soundSource.filename != null) {
+                val result = if (soundSource.filename != null) {
                     // try and get buffer from file
                     val sharedBuffer = fileHelper.readWavAsFloatArray(context, soundSource.filename)
                     sharedBuffer?.let { buffer ->
@@ -47,6 +47,12 @@ class AudioPlayer(
                         soundSource.volume,
                         soundSource.name
                     )
+                }
+                // if added successfully in SoundMixer, add to state
+                if( result == 0) {
+                    _soundSources.update {
+                        it.plus(soundSource.id to soundSource)
+                    }
                 }
             }
         }

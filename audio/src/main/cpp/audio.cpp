@@ -4,7 +4,7 @@
 static const char *TAG = "AudioPlayer";
 
 #include "SimpleNoiseMixer.h"
-#include "sources/GenericBufferSoundSourceFactory.cpp"
+#include "sources/GenericSoundSourceFactory.cpp"
 #include "JniHelpers.cpp"
 #include <android/log.h>
 
@@ -70,7 +70,7 @@ Java_com_application_audio_AudioPlayer_addSoundSource(JNIEnv *env, jobject thiz,
     auto idString = jstringToStdString(env, id);
     auto displayNameString = jstringToStdString(env, displayName);
 
-    auto soundSource = GenericBufferSoundSourceFactory::createSoundSource(
+    auto soundSource = GenericSoundSourceFactory::createSoundSource(
             type, static_cast<float>(volume), displayNameString);
 
     if (soundSource) {
@@ -102,7 +102,12 @@ Java_com_application_audio_AudioPlayer_addGenericBufferSoundSource(JNIEnv *env, 
     auto sharedBuffer = jfloatArrayToSharedVector(env, buffer);
     auto displayNameString = jstringToStdString(env, displayName);
 
-    auto genericBufferSoundSource = GenericBufferSoundSourceFactory::createSoundSource(
+    // if buffer is nullptr or is empty return error
+    if (!sharedBuffer || sharedBuffer->empty()) {
+        return static_cast<jint>(Result::ErrorInvalidState);
+    }
+
+    auto genericBufferSoundSource = GenericSoundSourceFactory::createSoundSource(
             sharedBuffer, static_cast<float>(volume),
             displayNameString);
 

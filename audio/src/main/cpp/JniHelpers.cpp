@@ -7,6 +7,13 @@
 #include <vector>
 #include <memory>
 
+/**
+ * @brief A helper method to convert jfloatArray from Kotlin to C++ std::shared_ptr<const std::vector<float>>
+ * This is used to store the predefined buffer in memory.
+ * @param env
+ * @param jArray The buffer of floats to be stored in Memory
+ * @return std::shared_ptr<const std::vector<float>> A pointer to the buffer of floats to be stored in Memory
+ */
 std::shared_ptr<const std::vector<float>>
 jfloatArrayToSharedVector(JNIEnv *env, jfloatArray jArray) {
     // 1. Get array length
