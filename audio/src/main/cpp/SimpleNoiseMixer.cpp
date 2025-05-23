@@ -44,23 +44,35 @@ oboe::Result SimpleNoiseMixer::close() {
     return mStream->close();
 }
 
-void SimpleNoiseMixer::addSoundSource(std::shared_ptr<SoundSource> soundSource) {
-    soundSources[soundSource->getSoundSourceType()] = std::move(soundSource);
+Result SimpleNoiseMixer::addSoundSource(std::string id, std::shared_ptr<SoundSource> soundSource) {
+    try {
+        soundSources[id] = std::move(soundSource);
+        return Result::OK;
+    } catch (const std::exception& e) {
+        return Result::ErrorInvalidState;
+    }
 }
 
-void SimpleNoiseMixer::updateSoundSourceVolume(SoundDefinitions::SoundSourceType id, float volume) {
+Result SimpleNoiseMixer::updateSoundSourceVolume(std::string id, float volume) {
     // if sound source exists in map
     auto soundSource = soundSources.find(id);
     if (soundSource != soundSources.end()) {
         soundSource->second->volume = volume;
+        return Result::OK;
     }
+
+    // sound source does not exist
+    return Result::ErrorInvalidState;
 }
 
-void SimpleNoiseMixer::removeSoundSource(SoundDefinitions::SoundSourceType id) {
+Result SimpleNoiseMixer::removeSoundSource(std::string id) {
     auto soundSource = soundSources.find(id);
     if (soundSource != soundSources.end()) {
         soundSources.erase(id);
+        return Result::OK;
     }
+
+    return Result::ErrorInvalidState;
 }
 
 // endregion

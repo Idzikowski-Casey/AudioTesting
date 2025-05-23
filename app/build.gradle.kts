@@ -41,6 +41,7 @@ android {
 }
 
 dependencies {
+    implementation(project(":database"))
     implementation(project(":audio"))
     implementation(libs.androidx.material.icons.extended)
     implementation(libs.oboe)

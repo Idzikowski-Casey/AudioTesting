@@ -4,11 +4,8 @@
 static const char *TAG = "AudioPlayer";
 
 #include "SimpleNoiseMixer.h"
-#include "sources/CampfireSoundSource.cpp"
-#include "sources/SineWaveSoundSource.cpp"
-#include "sources/WhiteNoiseSoundSource.cpp"
-#include "sources/WindSoundSource.cpp"
-#include "sources/RainSoundSource.cpp"
+#include "sources/GenericSoundSourceFactory.cpp"
+#include "JniHelpers.cpp"
 #include <android/log.h>
 
 #ifdef __cplusplus
@@ -57,27 +54,68 @@ Java_com_application_audio_AudioPlayer_stopPlayer(JNIEnv *env, jobject thiz) {
 }
 
 /**
- * @brief A native method that attempts to initialize the sound sources.
- *
+ * @brief Adds a sound source to the set in soundMixer. Creates a runtime soundSource that is created
+ * inside C++ code. Buffer is inline created.
  * @param env
  * @param thiz
- * @return
+ * @param id
+ * @param type
+ * @param volume
  */
 JNIEXPORT jint JNICALL
-Java_com_application_audio_AudioPlayer_initializeSoundSources(JNIEnv *env, jobject thiz) {
-    WhiteNoiseSoundSource whiteNoiseSoundSource = WhiteNoiseSoundSource(0.0f, "White Noise");
-    SineWaveSoundSource sineWaveSoundSource = SineWaveSoundSource(0.0f, "Sine Wave");
-    WindSoundSource windSoundSource = WindSoundSource(0.0f, "Wind");
-    RainSoundSource rainSoundSource = RainSoundSource(0.0f, "Rain");
-    CampfireSoundSource campfireSoundSource = CampfireSoundSource(0.0f, "Campfire");
+Java_com_application_audio_AudioPlayer_addSoundSource(JNIEnv *env, jobject thiz, jstring id,
+                                                      jint type, jfloat volume,
+                                                      jstring displayName) {
 
-    mixer.addSoundSource(std::make_shared<WhiteNoiseSoundSource>(whiteNoiseSoundSource));
-    mixer.addSoundSource(std::make_shared<SineWaveSoundSource>(sineWaveSoundSource));
-    mixer.addSoundSource(std::make_shared<WindSoundSource>(windSoundSource));
-    mixer.addSoundSource(std::make_shared<RainSoundSource>(rainSoundSource));
-    mixer.addSoundSource(std::make_shared<CampfireSoundSource>(campfireSoundSource));
+    auto idString = jstringToStdString(env, id);
+    auto displayNameString = jstringToStdString(env, displayName);
 
-    return static_cast<jint>(Result::OK);
+    auto soundSource = GenericSoundSourceFactory::createSoundSource(
+            type, static_cast<float>(volume), displayNameString);
+
+    if (soundSource) {
+        auto result = mixer.addSoundSource(idString, soundSource);
+        return static_cast<jint>(result);
+    }
+
+    // means nullptr
+    return static_cast<jint>(Result::ErrorInvalidState);
+}
+
+
+/**
+ * Adds an additional generic buffer sound source to the set in soundMixer. Pre-defined buffer is
+ * provided and panned through at runtime.
+ * @param env
+ * @param thiz
+ * @param id
+ * @param volume
+ * @param buffer
+ */
+JNIEXPORT jint JNICALL
+Java_com_application_audio_AudioPlayer_addGenericBufferSoundSource(JNIEnv *env, jobject thiz,
+                                                                   jstring id,
+                                                                   jfloat volume,
+                                                                   jfloatArray buffer,
+                                                                   jstring displayName) {
+
+    auto sharedBuffer = jfloatArrayToSharedVector(env, buffer);
+    auto displayNameString = jstringToStdString(env, displayName);
+
+    // if buffer is nullptr or is empty return error
+    if (!sharedBuffer || sharedBuffer->empty()) {
+        return static_cast<jint>(Result::ErrorInvalidState);
+    }
+
+    auto genericBufferSoundSource = GenericSoundSourceFactory::createSoundSource(
+            sharedBuffer, static_cast<float>(volume),
+            displayNameString);
+
+    auto idString = jstringToStdString(env, id);
+
+    auto result = mixer.addSoundSource(idString, genericBufferSoundSource);
+
+    return static_cast<jint>(result);
 }
 
 /**
@@ -88,12 +126,15 @@ Java_com_application_audio_AudioPlayer_initializeSoundSources(JNIEnv *env, jobje
  * @param id The id of the sound source to update.
  * @param volume The new volume of the sound source.
  */
-JNIEXPORT void JNICALL
-Java_com_application_audio_AudioPlayer_updateSoundSourceVolume(JNIEnv *env, jobject thiz, jint id,
+JNIEXPORT jint JNICALL
+Java_com_application_audio_AudioPlayer_updateSoundSourceVolume(JNIEnv *env, jobject thiz,
+                                                               jstring id,
                                                                jfloat volume) {
-    mixer.updateSoundSourceVolume(static_cast<SoundDefinitions::SoundSourceType>(id), volume);
-}
+    std::string idString = jstringToStdString(env, id);
+    auto result = mixer.updateSoundSourceVolume(idString, volume);
 
+    return static_cast<jint>(result);
+}
 #ifdef __cplusplus
 }
 #endif
