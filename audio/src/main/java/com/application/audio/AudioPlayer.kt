@@ -1,17 +1,20 @@
 package com.application.audio
 
 import android.content.Context
-import androidx.lifecycle.ViewModel
+import android.util.Log
 import com.application.database.SoundSource
 import com.application.database.SoundSourceData
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.io.Closeable
 
 class AudioPlayer(
-    private val viewModelScope: CloseableCoroutineScope = CloseableCoroutineScope()
-) : ViewModel(viewModelScope) {
+    private val appScope: CoroutineScope,
+    private val context: Context
+): Closeable {
 
     private val _playerState = MutableStateFlow<PlayerState>(PlayerState.NoResultYet)
     val playerState = _playerState.asStateFlow()
@@ -19,15 +22,16 @@ class AudioPlayer(
     private val _soundSources =
         MutableStateFlow<Map<String, SoundSource>>(emptyMap())
 
-    val soundSources = _soundSources.asStateFlow()
-
     // region public methods
 
-    fun initializeSources(context: Context) {
+    val soundSources = _soundSources.asStateFlow()
+
+    fun initializeSources() {
         val fileHelper = FileHelper()
 
-        viewModelScope.launch {
+        appScope.launch {
             SoundSourceData.forEach { soundSource ->
+                Log.i("AudioPlayer", "Adding sound source: ${soundSource.name}")
                 val result = if (soundSource.filename != null) {
                     // try and get buffer from file
                     val sharedBuffer = fileHelper.readWavAsFloatArray(context, soundSource.filename)
@@ -50,17 +54,50 @@ class AudioPlayer(
                 }
                 // if added successfully in SoundMixer, add to state
                 if( result == 0) {
+                    Log.i("AudioPlayer", "Added sound source: ${soundSource.name}")
                     _soundSources.update {
                         it.plus(soundSource.id to soundSource)
                     }
+                } else {
+                    Log.e("AudioPlayer", "Failed to add sound source: ${soundSource.name}")
                 }
             }
         }
     }
 
-    fun setPlaybackEnabled(enabled: Boolean) {
+    fun togglePlayBack() {
+        if (playerState.value == PlayerState.Started) {
+            setPlaybackEnabled(false)
+        } else {
+            setPlaybackEnabled(true)
+        }
+    }
 
-        viewModelScope.launch {
+    fun setSoundSourceVolume(id: String, volume: Float) {
+        val currentSource = _soundSources.value[id] ?: return
+        appScope.launch {
+            val result = updateSoundSourceVolume(id, volume)
+
+            if (result == 0) {
+                // A OKAY
+                _soundSources.update {
+                    it.plus(id to currentSource.copy(volume = volume))
+                }
+            }
+        }
+    }
+
+    override fun close() {
+        onStop()
+    }
+
+    // endregion
+
+    // region private funtions
+
+    private fun setPlaybackEnabled(enabled: Boolean) {
+
+        appScope.launch {
             val result = if (enabled) {
                 startPlayer()
             } else {
@@ -81,27 +118,8 @@ class AudioPlayer(
         }
     }
 
-    fun onStop() {
+    private fun onStop() {
         setPlaybackEnabled(false)
-    }
-
-    fun setSoundSourceVolume(id: String, volume: Float) {
-        val currentSource = _soundSources.value[id] ?: return
-        viewModelScope.launch {
-            val result = updateSoundSourceVolume(id, volume)
-
-            if (result == 0) {
-                // A OKAY
-                _soundSources.update {
-                    it.plus(id to currentSource.copy(volume = volume))
-                }
-            }
-        }
-    }
-
-    override fun onCleared() {
-        onStop()
-        super.onCleared()
     }
 
     // endregion

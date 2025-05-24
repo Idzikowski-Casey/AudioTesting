@@ -1,5 +1,11 @@
 package com.application.database
 
+data class SoundSourceMix(
+    val id: String,
+    val name: String,
+    val soundSources: List<SoundSource>
+)
+
 data class SoundSource(
     val id: String,
     val name: String,
