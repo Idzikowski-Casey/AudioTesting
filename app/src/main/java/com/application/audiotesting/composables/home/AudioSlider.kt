@@ -1,4 +1,4 @@
-package com.application.audiotesting.composables
+package com.application.audiotesting.composables.home
 
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Column
@@ -7,14 +7,12 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
+import com.application.audiotesting.data.AudioSliderData
 
 /**
  * A View that displays a title and a slider to adjust particular noise source
@@ -43,9 +41,3 @@ fun AudioSlider(data: AudioSliderData, modifier: Modifier = Modifier) {
         )
     }
 }
-
-data class AudioSliderData(
-    val name: String,
-    val volume: Float,
-    val onValueChange: (Float) -> Unit
-)

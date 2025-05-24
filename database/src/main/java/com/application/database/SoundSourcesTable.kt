@@ -3,7 +3,7 @@ package com.application.database
 val SoundSourceData: List<SoundSource> = listOf(
     SoundSource(
         id = "8529GENERICRAIN",
-        name = "Rain",
+        name = "Soft Rain",
         type = SoundSourceName.GENERIC,
         volume = 0f,
         filename = "rain1.wav"
