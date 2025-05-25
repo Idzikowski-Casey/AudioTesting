@@ -12,5 +12,4 @@ class MixesPresenter(private val audioPlayer: AudioPlayer) : Presenter {
 
         return listOf(HeaderData("Mixes"))
     }
-
 }
