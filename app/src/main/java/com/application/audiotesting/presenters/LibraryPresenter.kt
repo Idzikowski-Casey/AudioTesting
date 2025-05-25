@@ -6,12 +6,14 @@ import androidx.compose.material.icons.filled.Tune
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import com.application.audio.AudioPlayer
 import com.application.audiotesting.data.LibraryCategoryData
 import com.application.audiotesting.data.ViewDataModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import javax.inject.Inject
 
-class LibraryPresenter(private val audioPlayer: AudioPlayer) : Presenter {
+class LibraryPresenter @Inject constructor(
+    private val allSoundsPresenter: AllSoundsPresenter
+) : Presenter {
 
     private val selectedPage = MutableStateFlow<LibraryPage>(LibraryPage.NONE)
 
@@ -21,7 +23,7 @@ class LibraryPresenter(private val audioPlayer: AudioPlayer) : Presenter {
 
         return when (selectedPage) {
             LibraryPage.NONE -> getLibraryCategories()
-            LibraryPage.ALL_SOUNDS -> AllSoundsPresenter(audioPlayer).present()
+            LibraryPage.ALL_SOUNDS -> allSoundsPresenter.present()
             LibraryPage.MIXES -> listOf()
         }
     }

@@ -8,7 +8,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import com.application.audio.AudioPlayer
 import com.application.audiotesting.composables.navigation.NavBarItem
 import com.application.audiotesting.data.AppState
@@ -16,16 +15,19 @@ import com.application.audiotesting.data.Page
 import com.application.audiotesting.data.ViewDataModel
 import com.application.audiotesting.presenters.HomePresenter
 import com.application.audiotesting.presenters.LibraryPresenter
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import javax.inject.Inject
 
-class AppViewModel(
+@HiltViewModel
+class AppViewModel @Inject constructor(
     private val audioPlayer: AudioPlayer,
+    private val libraryPresenter: LibraryPresenter,
+    private val homePresenter: HomePresenter
 ) : ViewModel(audioPlayer) {
 
     private val appPage = MutableStateFlow<Page>(Page.HOME)
     private val isLoading = MutableStateFlow<Boolean>(false)
-
-    private val libraryPresenter = LibraryPresenter(audioPlayer)
 
     @Composable
     fun getAppState(): AppState {
@@ -34,7 +36,7 @@ class AppViewModel(
 
         val items: List<ViewDataModel> = when (page) {
             Page.HOME -> {
-                HomePresenter(audioPlayer).present()
+                homePresenter.present()
             }
             Page.LIBRARY -> {
                 libraryPresenter.present()
@@ -81,11 +83,5 @@ class AppViewModel(
                 }
             ),
         )
-    }
-}
-
-class AppViewModelFactory(private val audioPlayer: AudioPlayer) : ViewModelProvider.Factory {
-    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return AppViewModel(audioPlayer) as T
     }
 }

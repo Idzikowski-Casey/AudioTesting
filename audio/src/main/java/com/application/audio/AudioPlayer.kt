@@ -2,25 +2,30 @@ package com.application.audio
 
 import android.content.Context
 import android.util.Log
+import com.application.coroutines.ApplicationScope
 import com.application.database.SoundSource
 import com.application.database.SoundSourceData
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.io.Closeable
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class AudioPlayer(
-    private val appScope: CoroutineScope,
-    private val context: Context
+@Singleton
+class AudioPlayer @Inject constructor(
+    @ApplicationScope private val appScope: CoroutineScope,
+    @ApplicationContext private val context: Context
 ): Closeable {
 
     private val _playerState = MutableStateFlow<PlayerState>(PlayerState.NoResultYet)
     val playerState = _playerState.asStateFlow()
 
     private val _soundSources =
-        MutableStateFlow<Map<String, SoundSource>>(emptyMap())
+        MutableStateFlow<Map<String, SoundSource>>(SoundSourceData.associateBy { it.id })
 
     // region public methods
 
@@ -55,9 +60,6 @@ class AudioPlayer(
                 // if added successfully in SoundMixer, add to state
                 if( result == 0) {
                     Log.i("AudioPlayer", "Added sound source: ${soundSource.name}")
-                    _soundSources.update {
-                        it.plus(soundSource.id to soundSource)
-                    }
                 } else {
                     Log.e("AudioPlayer", "Failed to add sound source: ${soundSource.name}")
                 }
