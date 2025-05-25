@@ -4,53 +4,40 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.LibraryMusic
 import androidx.compose.material.icons.filled.Tune
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import cafe.adriel.voyager.navigator.LocalNavigator
+import cafe.adriel.voyager.navigator.currentOrThrow
 import com.application.audiotesting.data.LibraryCategoryData
 import com.application.audiotesting.data.ViewDataModel
-import kotlinx.coroutines.flow.MutableStateFlow
+import com.application.audiotesting.screens.AllSoundsScreen
+import com.application.audiotesting.screens.MixesScreen
 import javax.inject.Inject
 
-class LibraryPresenter @Inject constructor(
-    private val allSoundsPresenter: AllSoundsPresenter
-) : Presenter {
-
-    private val selectedPage = MutableStateFlow<LibraryPage>(LibraryPage.NONE)
+class LibraryPresenter @Inject constructor() : Presenter {
 
     @Composable
     override fun present(): List<ViewDataModel> {
-        val selectedPage by selectedPage.collectAsState()
-
-        return when (selectedPage) {
-            LibraryPage.NONE -> getLibraryCategories()
-            LibraryPage.ALL_SOUNDS -> allSoundsPresenter.present()
-            LibraryPage.MIXES -> listOf()
-        }
+        return getLibraryCategories()
     }
 
     @Composable
     fun getLibraryCategories(): List<ViewDataModel> {
+        val navigator = LocalNavigator.currentOrThrow
+
         return listOf(
             LibraryCategoryData(
                 name = "All Sounds",
                 onClick = {
-                    selectedPage.value = LibraryPage.ALL_SOUNDS
+                    navigator.push(AllSoundsScreen())
                 },
                 icon = Icons.Filled.LibraryMusic
             ),
             LibraryCategoryData(
                 name = "Mixes",
                 onClick = {
-                    selectedPage.value = LibraryPage.MIXES
+                    navigator.push(MixesScreen())
                 },
                 icon = Icons.Filled.Tune
             )
         )
     }
-}
-
-enum class LibraryPage {
-    NONE,
-    ALL_SOUNDS,
-    MIXES
 }

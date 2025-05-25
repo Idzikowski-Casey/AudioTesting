@@ -3,12 +3,15 @@ package com.application.audiotesting.presenters
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import cafe.adriel.voyager.core.model.ScreenModel
 import com.application.audio.AudioPlayer
 import com.application.audiotesting.data.SoundSliderData
 import com.application.audiotesting.data.ViewDataModel
 import javax.inject.Inject
 
-class AllSoundsPresenter @Inject constructor(private val audioPlayer: AudioPlayer) : Presenter {
+class AllSoundsPresenter @Inject constructor(
+    private val audioPlayer: AudioPlayer
+) : Presenter {
 
     @Composable
     override fun present(): List<ViewDataModel> {

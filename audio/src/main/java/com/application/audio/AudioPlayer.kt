@@ -90,7 +90,7 @@ class AudioPlayer @Inject constructor(
     }
 
     override fun close() {
-        onStop()
+        release()
     }
 
     // endregion
@@ -120,7 +120,7 @@ class AudioPlayer @Inject constructor(
         }
     }
 
-    private fun onStop() {
+    fun release() {
         setPlaybackEnabled(false)
     }
 

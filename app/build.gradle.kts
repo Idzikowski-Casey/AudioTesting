@@ -47,6 +47,12 @@ dependencies {
     implementation(project(":audio"))
     implementation(project(":coroutines"))
 
+    implementation(libs.voyager.navigator)
+    implementation(libs.voyager.tabs)
+    implementation(libs.voyager.screenmodel)
+    implementation(libs.voyager.transitions)
+    implementation(libs.voyager.hilt)
+
     implementation(libs.hilt.android)
     ksp(libs.hilt.android.compiler)
     implementation(libs.androidx.material.icons.extended)

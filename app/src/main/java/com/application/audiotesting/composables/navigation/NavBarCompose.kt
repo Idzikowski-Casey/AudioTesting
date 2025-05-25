@@ -5,13 +5,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.selection.selectableGroup
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.LibraryMusic
-import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBarDefaults
-import androidx.compose.material3.NavigationBarItem
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.ui.Alignment
@@ -19,6 +13,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import cafe.adriel.voyager.navigator.tab.Tab
+import com.application.audiotesting.tabs.HomeTab
+import com.application.audiotesting.tabs.LibraryTab
+import com.application.audiotesting.tabs.SettingsTab
 
 @Immutable
 data class NavBarItem(
@@ -29,7 +27,7 @@ data class NavBarItem(
 )
 
 @Composable
-fun NavBarCompose(navItems: List<NavBarItem>) {
+fun NavBarCompose(tabs: List<Tab>) {
     Row(
         modifier =
             Modifier
@@ -39,17 +37,8 @@ fun NavBarCompose(navItems: List<NavBarItem>) {
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        navItems.map {
-            NavigationBarItem(
-                selected = it.selected,
-                onClick = it.onClick,
-                icon = {
-                    Icon(
-                        it.icon,
-                        contentDescription = it.contentDescription
-                    )
-                }
-            )
+        tabs.map {
+            TabNavigationItem(tab = it)
         }
     }
 }
@@ -58,25 +47,10 @@ fun NavBarCompose(navItems: List<NavBarItem>) {
 @Composable
 fun NavBarPreview() {
     val navItems = listOf(
-        NavBarItem(
-            contentDescription = "Home",
-            icon = Icons.Filled.Home,
-            selected = true,
-            onClick = {}
-        ),
-        NavBarItem(
-            contentDescription = "Library",
-            icon = Icons.Filled.LibraryMusic,
-            selected = false,
-            onClick = {}
-        ),
-        NavBarItem(
-            contentDescription = "Settings",
-            icon = Icons.Filled.Settings,
-            selected = false,
-            onClick = {}
-        ),
+        HomeTab,
+        LibraryTab,
+        SettingsTab
     )
 
-    NavBarCompose(navItems = navItems)
+    NavBarCompose(tabs = navItems)
 }
