@@ -6,8 +6,9 @@ import androidx.compose.runtime.getValue
 import com.application.audio.AudioPlayer
 import com.application.audiotesting.data.SoundSliderData
 import com.application.audiotesting.data.ViewDataModel
+import javax.inject.Inject
 
-class AllSoundsPresenter (private val audioPlayer: AudioPlayer): Presenter {
+class AllSoundsPresenter @Inject constructor(private val audioPlayer: AudioPlayer) : Presenter {
 
     @Composable
     override fun present(): List<ViewDataModel> {

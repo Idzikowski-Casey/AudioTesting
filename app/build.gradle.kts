@@ -2,6 +2,8 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.hilt.android)
 }
 
 android {
@@ -43,6 +45,10 @@ android {
 dependencies {
     implementation(project(":database"))
     implementation(project(":audio"))
+    implementation(project(":coroutines"))
+
+    implementation(libs.hilt.android)
+    ksp(libs.hilt.android.compiler)
     implementation(libs.androidx.material.icons.extended)
     implementation(libs.oboe)
     implementation(libs.androidx.core.ktx)

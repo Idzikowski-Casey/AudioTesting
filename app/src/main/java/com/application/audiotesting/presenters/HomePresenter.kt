@@ -15,8 +15,9 @@ import com.application.audiotesting.data.PlayPauseData
 import com.application.audiotesting.data.ViewDataModel
 import com.application.database.FavoritesData
 import com.application.database.SoundSource
+import javax.inject.Inject
 
-class HomePresenter(private val audioPlayer: AudioPlayer) : Presenter {
+class HomePresenter @Inject constructor(private val audioPlayer: AudioPlayer) : Presenter {
 
     @Composable
     override fun present(): List<ViewDataModel> {

@@ -18,26 +18,25 @@ import androidx.compose.ui.unit.dp
 import com.application.audio.AudioPlayer
 import com.application.audiotesting.composables.navigation.NavBarCompose
 import com.application.audiotesting.ui.theme.AudioTestingTheme
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
-    private lateinit var audioPlayer: AudioPlayer
-    private val appScope: CoroutineScope =
-        CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
+    @Inject
+    lateinit var audioPlayer: AudioPlayer
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
-        audioPlayer = AudioPlayer(appScope, this.applicationContext)
         audioPlayer.initializeSources()
 
-        val viewModel: AppViewModel by viewModels {
-            AppViewModelFactory(audioPlayer)
-        }
+        val viewModel: AppViewModel by viewModels()
 
         setContent {
             AudioTestingTheme {
