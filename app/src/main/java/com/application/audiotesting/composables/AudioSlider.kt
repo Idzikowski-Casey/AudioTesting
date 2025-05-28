@@ -1,4 +1,4 @@
-package com.application.audiotesting.composables.home
+package com.application.audiotesting.composables
 
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Column
@@ -11,6 +11,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.application.audiotesting.data.AudioSliderData
 
@@ -40,4 +41,16 @@ fun AudioSlider(data: AudioSliderData, modifier: Modifier = Modifier) {
             interactionSource = interactionSource
         )
     }
+}
+
+@Preview
+@Composable
+fun AudioSliderPreview() {
+    val data = AudioSliderData(
+        name = "Test",
+        volume = 0.5f,
+        onValueChange = {}
+    )
+
+    AudioSlider(data)
 }

@@ -4,11 +4,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
-import com.application.audiotesting.composables.home.AudioSlider
-import com.application.audiotesting.composables.home.HeaderComposable
-import com.application.audiotesting.composables.home.PlayPauseIcon
-import com.application.audiotesting.composables.library.LibraryCategory
-import com.application.audiotesting.composables.library.SoundSlider
+import com.application.audiotesting.composables.AudioSlider
+import com.application.audiotesting.composables.HeaderComposable
+import com.application.audiotesting.composables.PlayPauseIcon
+import com.application.audiotesting.composables.LibraryCategory
+import com.application.audiotesting.composables.SoundSlider
 
 interface ViewDataModel {
     fun stableKey(): String
