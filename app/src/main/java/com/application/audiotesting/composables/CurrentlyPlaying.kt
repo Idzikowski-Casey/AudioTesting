@@ -1,15 +1,11 @@
 package com.application.audiotesting.composables
 
-import androidx.compose.animation.core.LinearEasing
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.basicMarquee
-import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.Card
@@ -18,38 +14,32 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.application.audiotesting.data.AudioSliderData
+import com.application.audiotesting.data.CurrentlyPlayingData
+import com.application.audiotesting.data.PlayPauseData
 
 @Composable
-fun CurrentlyPlaying() {
-
-    val sounds = listOf(
-        "sound1",
-        "sound2",
-        "sound3",
-        "sound4",
-        "sound5"
-    )
+fun CurrentlyPlaying(data: CurrentlyPlayingData, modifier: Modifier = Modifier) {
 
     Card {
         Row(
-            modifier = Modifier
+            modifier = modifier
                 .height(IntrinsicSize.Min)
                 .padding(8.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            CurrentlyPlayingTitles(sounds, modifier = Modifier.weight(0.5f))
+            CurrentlyPlayingTitles(data.sounds.map { it.name }, modifier = Modifier.weight(0.5f))
             CurrentlyPlayingIcon(
                 modifier = Modifier.weight(.1f),
-                icon = Icons.Filled.PlayArrow,
-                onClick = {})
+                icon = data.playPauseData.icon,
+                onClick = data.playPauseData.onClick
+            )
         }
     }
 }
@@ -62,7 +52,7 @@ fun CurrentlyPlayingTitles(
     val fullText = items.joinToString("   •   ")
 
     Row(
-        modifier = modifier.basicMarquee(velocity = 40.dp)
+        modifier = modifier.basicMarquee(iterations = Int.MAX_VALUE, velocity = 40.dp)
     ) {
         Text(
             text = fullText,
@@ -90,5 +80,34 @@ private fun CurrentlyPlayingIcon(
 @Preview
 @Composable
 fun CurrentlyPlayingPreview() {
-    CurrentlyPlaying()
+    val data = CurrentlyPlayingData(
+        sounds = listOf(
+            AudioSliderData(
+                name = "Camp Fire",
+                volume = 0.5f,
+                onValueChange = {}
+            ),
+            AudioSliderData(
+                name = "Rain on Leaves",
+                volume = 0.5f,
+                onValueChange = {}
+            ),
+            AudioSliderData(
+                name = "Birds in Rainforest",
+                volume = 0.5f,
+                onValueChange = {}
+            ),
+            AudioSliderData(
+                name = "Frogs on Summer Night",
+                volume = 0.5f,
+                onValueChange = {}
+            )
+        ),
+        playPauseData = PlayPauseData(
+            icon = Icons.Default.PlayArrow,
+            onClick = {}
+        )
+        )
+
+    CurrentlyPlaying(data)
 }

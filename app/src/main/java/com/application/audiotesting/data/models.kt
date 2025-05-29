@@ -5,6 +5,7 @@ import androidx.compose.runtime.Immutable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.application.audiotesting.composables.AudioSlider
+import com.application.audiotesting.composables.CurrentlyPlaying
 import com.application.audiotesting.composables.HeaderComposable
 import com.application.audiotesting.composables.PlayPauseIcon
 import com.application.audiotesting.composables.LibraryCategory
@@ -82,5 +83,18 @@ data class SoundSliderData(
     @Composable
     override fun Render(data: ViewDataModel, modifier: Modifier) {
         SoundSlider(data as SoundSliderData, modifier = modifier)
+    }
+}
+
+@Immutable
+data class CurrentlyPlayingData(
+    val sounds: List<AudioSliderData>,
+    val playPauseData: PlayPauseData
+) : ViewDataModel {
+    override fun stableKey(): String = "CurrentlyPlayingBar"
+
+    @Composable
+    override fun Render(data: ViewDataModel, modifier: Modifier) {
+        CurrentlyPlaying(data as CurrentlyPlayingData, modifier)
     }
 }
