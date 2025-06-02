@@ -19,7 +19,7 @@ import javax.inject.Singleton
 class AudioPlayer @Inject constructor(
     @ApplicationScope private val appScope: CoroutineScope,
     @ApplicationContext private val context: Context
-): Closeable {
+) {
 
     private val _playerState = MutableStateFlow<PlayerState>(PlayerState.NoResultYet)
     val playerState = _playerState.asStateFlow()
@@ -27,9 +27,15 @@ class AudioPlayer @Inject constructor(
     private val _soundSources =
         MutableStateFlow<Map<String, SoundSource>>(SoundSourceData.associateBy { it.id })
 
+    /**
+     * A set of currently playing sources. Strings are the IDs that should map to soundSources
+     */
+    private val _currentlyPlayingSources = MutableStateFlow<Set<String>>(emptySet())
+
     // region public methods
 
     val soundSources = _soundSources.asStateFlow()
+    val currentlyPlayingSources = _currentlyPlayingSources.asStateFlow()
 
     fun initializeSources() {
         val fileHelper = FileHelper()
@@ -58,7 +64,7 @@ class AudioPlayer @Inject constructor(
                     )
                 }
                 // if added successfully in SoundMixer, add to state
-                if( result == 0) {
+                if (result == 0) {
                     Log.i("AudioPlayer", "Added sound source: ${soundSource.name}")
                 } else {
                     Log.e("AudioPlayer", "Failed to add sound source: ${soundSource.name}")
@@ -85,12 +91,17 @@ class AudioPlayer @Inject constructor(
                 _soundSources.update {
                     it.plus(id to currentSource.copy(volume = volume))
                 }
+                if (volume > 0f) {
+                    _currentlyPlayingSources.update {
+                        it.plus(id)
+                    }
+                } else {
+                    _currentlyPlayingSources.update {
+                        it.minus(id)
+                    }
+                }
             }
         }
-    }
-
-    override fun close() {
-        release()
     }
 
     // endregion

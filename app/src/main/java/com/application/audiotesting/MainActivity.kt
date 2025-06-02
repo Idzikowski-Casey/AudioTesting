@@ -40,16 +40,11 @@ import javax.inject.Inject
 class MainActivity : ComponentActivity() {
 
     @Inject
-    lateinit var audioPlayer: AudioPlayer
-
-    @Inject
     lateinit var currentlyPlayingPresenter: CurrentlyPlayingPresenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-
-        audioPlayer.initializeSources()
 
         setContent {
             TabNavigator(HomeTab) {
@@ -106,12 +101,6 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
-    }
-
-    override fun onDestroy() {
-        // TODO this is called on rotations too
-        audioPlayer.release()
-        super.onDestroy()
     }
 }
 
