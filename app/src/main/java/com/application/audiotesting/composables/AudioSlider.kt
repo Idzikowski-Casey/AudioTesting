@@ -14,6 +14,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.application.audiotesting.data.AudioSliderData
+import com.application.audiotesting.ui.theme.AudioTestingTheme
 
 /**
  * A View that displays a title and a slider to adjust particular noise source
@@ -51,6 +52,10 @@ fun AudioSliderPreview() {
         volume = 0.5f,
         onValueChange = {}
     )
-
-    AudioSlider(data)
+    AudioTestingTheme(
+        darkTheme = false,
+        dynamicColor = false
+    ) {
+        AudioSlider(data)
+    }
 }
