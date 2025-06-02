@@ -1,7 +1,10 @@
 package com.application.audiotesting.composables
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.basicMarquee
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.height
@@ -14,6 +17,10 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -22,25 +29,54 @@ import androidx.compose.ui.unit.dp
 import com.application.audiotesting.data.AudioSliderData
 import com.application.audiotesting.data.CurrentlyPlayingData
 import com.application.audiotesting.data.PlayPauseData
+import com.application.audiotesting.ui.theme.AudioTestingTheme
 
 @Composable
 fun CurrentlyPlaying(data: CurrentlyPlayingData, modifier: Modifier = Modifier) {
 
-    Card {
-        Row(
-            modifier = modifier
-                .height(IntrinsicSize.Min)
-                .padding(8.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            CurrentlyPlayingTitles(data.sounds.map { it.name }, modifier = Modifier.weight(0.5f))
-            CurrentlyPlayingIcon(
-                modifier = Modifier.weight(.1f),
-                icon = data.playPauseData.icon,
-                onClick = data.playPauseData.onClick
-            )
+    var isExpanded by remember { mutableStateOf(false) }
+
+    Card(modifier = modifier.clickable { isExpanded = !isExpanded }) {
+        AnimatedVisibility(isExpanded) {
+            CurrentlyPlayingExpanded(data)
         }
+        CurrentlyPlayingRow(data)
+    }
+}
+
+@Composable
+private fun CurrentlyPlayingExpanded(
+    data: CurrentlyPlayingData,
+    modifier: Modifier = Modifier
+) {
+    Column {
+        data.sounds.forEach {
+            AudioSlider(data = it, modifier = modifier)
+        }
+    }
+}
+
+@Composable
+private fun CurrentlyPlayingRow(
+    data: CurrentlyPlayingData,
+    modifier: Modifier = Modifier
+) {
+    Row(
+        modifier = modifier
+            .height(IntrinsicSize.Min)
+            .padding(8.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        CurrentlyPlayingTitles(
+            data.sounds.map { it.name },
+            modifier = Modifier.weight(0.5f)
+        )
+        CurrentlyPlayingIcon(
+            modifier = Modifier.weight(.1f),
+            icon = data.playPauseData.icon,
+            onClick = data.playPauseData.onClick
+        )
     }
 }
 
@@ -79,7 +115,7 @@ private fun CurrentlyPlayingIcon(
 
 @Preview
 @Composable
-fun CurrentlyPlayingPreview() {
+private fun CurrentlyPlayingCollapsedPreview() {
     val data = CurrentlyPlayingData(
         sounds = listOf(
             AudioSliderData(
@@ -107,7 +143,9 @@ fun CurrentlyPlayingPreview() {
             icon = Icons.Default.PlayArrow,
             onClick = {}
         )
-        )
+    )
 
-    CurrentlyPlaying(data)
+    AudioTestingTheme {
+        CurrentlyPlaying(data)
+    }
 }

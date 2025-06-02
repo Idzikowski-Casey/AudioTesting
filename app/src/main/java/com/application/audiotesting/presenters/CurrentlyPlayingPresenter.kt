@@ -22,8 +22,7 @@ class CurrentlyPlayingPresenter @Inject constructor(
     override fun present(): List<ViewDataModel> {
         val playerState by audioPlayer.playerState.collectAsState()
         val sources by audioPlayer.soundSources.collectAsState()
-
-        val currentlyPlaying = sources.filter { it.value.volume > 0f }
+        val currentlyPlaying by audioPlayer.currentlyPlayingSources.collectAsState()
 
         val icon = if (playerState == PlayerState.Started) {
             Icons.Filled.Pause
@@ -31,17 +30,26 @@ class CurrentlyPlayingPresenter @Inject constructor(
             Icons.Filled.PlayArrow
         }
 
+        val currentSources = currentlyPlaying.fold<String, List<AudioSliderData>>(
+            emptyList(),
+            { acc, key ->
+                val source = sources[key]
+                if (source != null) {
+                    acc + AudioSliderData(
+                        name = source.name,
+                        volume = source.volume,
+                        onValueChange = { volume ->
+                            audioPlayer.setSoundSourceVolume(key, volume)
+                        })
+                } else {
+                    acc
+                }
+            })
+
+
         return listOf(
             CurrentlyPlayingData(
-                sounds = currentlyPlaying.map { (key, value) ->
-                    AudioSliderData(
-                        name = value.name,
-                        volume = value.volume,
-                        onValueChange = {
-                            audioPlayer.setSoundSourceVolume(key, it)
-                        }
-                    )
-                },
+                sounds = currentSources,
                 playPauseData = PlayPauseData(
                     icon = icon,
                     onClick = {
