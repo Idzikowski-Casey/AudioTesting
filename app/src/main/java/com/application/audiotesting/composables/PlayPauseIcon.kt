@@ -1,4 +1,4 @@
-package com.application.audiotesting.composables.home
+package com.application.audiotesting.composables
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.size

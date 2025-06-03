@@ -1,4 +1,4 @@
-package com.application.audiotesting.composables.library
+package com.application.audiotesting.composables
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement

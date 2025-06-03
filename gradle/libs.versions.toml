@@ -16,6 +16,7 @@ oboe = "1.9.3"
 ksp = "2.1.21-2.0.1"
 hilt = "2.56.2"
 voyager = "1.1.0-beta02"
+lifecycleProcess = "2.9.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -43,6 +44,7 @@ voyager-screenmodel = { group = "cafe.adriel.voyager", name = "voyager-screenmod
 voyager-tabs = { group = "cafe.adriel.voyager", name = "voyager-tab-navigator", version.ref = "voyager" }
 voyager-transitions = { group = "cafe.adriel.voyager", name = "voyager-transitions", version.ref = "voyager" }
 voyager-hilt = { group = "cafe.adriel.voyager", name = "voyager-hilt", version.ref = "voyager" }
+androidx-lifecycle-process = { group = "androidx.lifecycle", name = "lifecycle-process", version.ref = "lifecycleProcess" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

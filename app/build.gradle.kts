@@ -54,6 +54,7 @@ dependencies {
     implementation(libs.voyager.hilt)
 
     implementation(libs.hilt.android)
+    implementation(libs.androidx.lifecycle.process)
     ksp(libs.hilt.android.compiler)
     implementation(libs.androidx.material.icons.extended)
     implementation(libs.oboe)
