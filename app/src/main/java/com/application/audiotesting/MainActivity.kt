@@ -21,6 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
@@ -59,8 +60,8 @@ class MainActivity : ComponentActivity() {
                                 modifier = Modifier
                                     .padding(
                                         top = innerPadding.calculateTopPadding(),
-                                        start = innerPadding.calculateStartPadding(layoutDirection = LayoutDirection.Rtl),
-                                        end = innerPadding.calculateEndPadding(layoutDirection = LayoutDirection.Rtl)
+                                        start = innerPadding.calculateStartPadding(LocalLayoutDirection.current),
+                                        end = innerPadding.calculateEndPadding(LocalLayoutDirection.current)
                                     )
                                     .fillMaxSize()
                             ) {
@@ -75,8 +76,6 @@ class MainActivity : ComponentActivity() {
 
                             Column(
                                 Modifier
-                                    .background(color = Color.Transparent)
-                                    .zIndex(1f)
                                     .onGloballyPositioned { coordinates ->
                                         // Get height in pixels
                                         val heightPx = coordinates.size.height

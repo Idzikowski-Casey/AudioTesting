@@ -14,6 +14,10 @@ import com.application.audiotesting.data.PlayPauseData
 import com.application.audiotesting.data.ViewDataModel
 import javax.inject.Inject
 
+/**
+ * A Presenter class for the currently playing ribbon and expandable view.
+ * The is part of the base scaffold and will appear on every page.
+ */
 class CurrentlyPlayingPresenter @Inject constructor(
     private val audioPlayer: AudioPlayer
 ) : Presenter {
@@ -30,6 +34,10 @@ class CurrentlyPlayingPresenter @Inject constructor(
             Icons.Filled.PlayArrow
         }
 
+        /**
+         * Loop through the currently playing sources and get the SoundSource
+         * object for metadata
+         */
         val currentSources = currentlyPlaying.fold<String, List<AudioSliderData>>(
             emptyList(),
             { acc, key ->

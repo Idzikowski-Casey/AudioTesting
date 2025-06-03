@@ -34,6 +34,8 @@ fun BaseScreenDefaultContent(items: List<ViewDataModel>) {
             item.Render(item)
         }
 
+        // add a spacer to allow for all content on the screen
+        // to be scrollable to.
         item {
             Spacer(Modifier.height(LocalBottomBarHeight.current))
         }
