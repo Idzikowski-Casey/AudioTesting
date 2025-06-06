@@ -1,5 +1,9 @@
-## Audio Testing
+![Waves Of Silence](assets/FullIconWithText.png)
 
-A space to test different Android Audio playback mechanisms and resource management. 
+Waves of Silence is an App for focus, sleep, and relaxation. Waves of Silence allows the user to 
+create custom sound scapes by mixing different sound tracks together at varying volumes.  
 
-Testing out [Oboe](https://github.com/google/oboe/tree/main) in a Kotlin / Compose app. 
+The mixing engine is build with the Android NDK for harnessing native performance. [Oboe](https://github.com/google/oboe/tree/main) was used
+for the C++ engine. 
+ 
+
