@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.application.audio"
+    namespace = "com.idzcasey.wavesofsilence.audio"
     compileSdk = 35
 
     defaultConfig {

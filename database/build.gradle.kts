@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace = "com.application.database"
+    namespace = "com.idzcasey.wavesofsilence.database"
     compileSdk = 35
 
     defaultConfig {

@@ -25,7 +25,7 @@ static SimpleNoiseMixer mixer;
  * @return Oboe::Result
  */
 JNIEXPORT jint JNICALL
-Java_com_application_audio_AudioPlayer_startPlayer(JNIEnv *env, jobject thiz) {
+Java_com_idzcasey_wavesofsilence_audio_AudioPlayer_startPlayer(JNIEnv *env, jobject thiz) {
     __android_log_print(ANDROID_LOG_INFO, TAG, "%s", __func__);
 
     Result result = mixer.open();
@@ -44,7 +44,7 @@ Java_com_application_audio_AudioPlayer_startPlayer(JNIEnv *env, jobject thiz) {
  * @return Oboe::Result
  */
 JNIEXPORT jint JNICALL
-Java_com_application_audio_AudioPlayer_stopPlayer(JNIEnv *env, jobject thiz) {
+Java_com_idzcasey_wavesofsilence_audio_AudioPlayer_stopPlayer(JNIEnv *env, jobject thiz) {
     __android_log_print(ANDROID_LOG_INFO, TAG, "%s", __func__);
 
     Result result1 = mixer.stop();
@@ -63,7 +63,7 @@ Java_com_application_audio_AudioPlayer_stopPlayer(JNIEnv *env, jobject thiz) {
  * @param volume
  */
 JNIEXPORT jint JNICALL
-Java_com_application_audio_AudioPlayer_addSoundSource(JNIEnv *env, jobject thiz, jstring id,
+Java_com_idzcasey_wavesofsilence_audio_AudioPlayer_addSoundSource(JNIEnv *env, jobject thiz, jstring id,
                                                       jint type, jfloat volume,
                                                       jstring displayName) {
 
@@ -93,7 +93,7 @@ Java_com_application_audio_AudioPlayer_addSoundSource(JNIEnv *env, jobject thiz,
  * @param buffer
  */
 JNIEXPORT jint JNICALL
-Java_com_application_audio_AudioPlayer_addGenericBufferSoundSource(JNIEnv *env, jobject thiz,
+Java_com_idzcasey_wavesofsilence_audio_AudioPlayer_addGenericBufferSoundSource(JNIEnv *env, jobject thiz,
                                                                    jstring id,
                                                                    jfloat volume,
                                                                    jfloatArray buffer,
@@ -127,7 +127,7 @@ Java_com_application_audio_AudioPlayer_addGenericBufferSoundSource(JNIEnv *env, 
  * @param volume The new volume of the sound source.
  */
 JNIEXPORT jint JNICALL
-Java_com_application_audio_AudioPlayer_updateSoundSourceVolume(JNIEnv *env, jobject thiz,
+Java_com_idzcasey_wavesofsilence_audio_AudioPlayer_updateSoundSourceVolume(JNIEnv *env, jobject thiz,
                                                                jstring id,
                                                                jfloat volume) {
     std::string idString = jstringToStdString(env, id);
