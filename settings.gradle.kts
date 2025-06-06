@@ -19,7 +19,7 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "AudioTesting"
+rootProject.name = "Waves Of Silence"
 include(":app")
 include(":audio")
 include(":database")

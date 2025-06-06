@@ -7,11 +7,11 @@ plugins {
 }
 
 android {
-    namespace = "com.application.audiotesting"
+    namespace = "com.idzcasey.wavesofsilence"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.application.audiotesting"
+        applicationId = "com.idzcasey.wavesofsilence"
         minSdk = 24
         targetSdk = 35
         versionCode = 1

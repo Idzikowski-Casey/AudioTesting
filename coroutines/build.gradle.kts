@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.application.coroutines"
+    namespace = "com.idzcasey.wavesofsilence.coroutines"
     compileSdk = 35
 
     defaultConfig {
