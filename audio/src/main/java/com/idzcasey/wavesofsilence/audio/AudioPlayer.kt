@@ -5,6 +5,7 @@ import android.util.Log
 import com.idzcasey.wavesofsilence.coroutines.ApplicationScope
 import com.idzcasey.wavesofsilence.database.SoundSource
 import com.idzcasey.wavesofsilence.database.SoundSourceData
+import com.idzcasey.wavesofsilence.database.Mixes
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -30,11 +31,14 @@ class AudioPlayer @Inject constructor(
      * A set of currently playing sources. Strings are the IDs that should map to soundSources
      */
     private val _currentlyPlayingSources = MutableStateFlow<Set<String>>(emptySet())
+    private val _currentlyPlayingMix = MutableStateFlow<String?>(null)
 
     // region public methods
 
     val soundSources = _soundSources.asStateFlow()
     val currentlyPlayingSources = _currentlyPlayingSources.asStateFlow()
+    val currentlyPlayingMix = _currentlyPlayingMix.asStateFlow()
+    val mixes = Mixes.associateBy { it.id }
 
     fun initializeSources() {
         val fileHelper = FileHelper()
@@ -82,24 +86,77 @@ class AudioPlayer @Inject constructor(
 
     fun setSoundSourceVolume(id: String, volume: Float) {
         val currentSource = _soundSources.value[id] ?: return
-        appScope.launch {
-            val result = updateSoundSourceVolume(id, volume)
 
-            if (result == 0) {
-                // A OKAY
-                _soundSources.update {
-                    it.plus(id to currentSource.copy(volume = volume))
+        val result = updateSoundSourceVolume(id, volume)
+
+        if (result == 0) {
+            // A OKAY
+            _soundSources.update {
+                it.plus(id to currentSource.copy(volume = volume))
+            }
+            if (volume > 0f) {
+                _currentlyPlayingSources.update {
+                    it.plus(id)
                 }
-                if (volume > 0f) {
-                    _currentlyPlayingSources.update {
-                        it.plus(id)
-                    }
-                } else {
-                    _currentlyPlayingSources.update {
-                        it.minus(id)
-                    }
+            } else {
+                _currentlyPlayingSources.update {
+                    it.minus(id)
                 }
             }
+            // clear currently playing mix because
+            // a volume was changed after a mix was started
+            _currentlyPlayingMix.value = null
+        }
+    }
+
+    /**
+     * Starts a mix with the given ID
+     *
+     * Will first stop any currently playing soundSources and
+     * then set volume for each soundSource in the mix
+     *
+     * @param id The ID of the mix to start
+     */
+    fun startMix(id: String) {
+        val mix = mixes[id] ?: return
+
+        // turn off all existing sounds
+        currentlyPlayingSources.value.forEach {
+            setSoundSourceVolume(it, 0f)
+        }
+
+        // set volume for each sound source in mix
+        mix.soundSources.forEach {
+            setSoundSourceVolume(it.id, it.volume)
+        }
+        _currentlyPlayingMix.value = id
+
+        // attempt to start playback if not already started
+        if (playerState.value != PlayerState.Started) {
+            setPlaybackEnabled(true)
+        }
+    }
+
+    /**
+     * Stops the currently playing mix given an ID
+     *
+     * First validates that the mix is currently playing and exists
+     * Then turns off all sounds in the mix and stops playback if playback ongoing
+     *
+     * @param id The ID of the mix to stop
+     */
+    fun stopMix(id: String) {
+        if (_currentlyPlayingMix.value != id) return
+        val mix = mixes[id] ?: return
+
+        // turn off all sounds in mix
+        mix.soundSources.forEach {
+            setSoundSourceVolume(it.id, 0f)
+        }
+        _currentlyPlayingMix.value = null
+
+        if (playerState.value == PlayerState.Started) {
+            setPlaybackEnabled(false)
         }
     }
 

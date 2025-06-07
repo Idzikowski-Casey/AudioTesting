@@ -1,5 +1,7 @@
 package com.idzcasey.wavesofsilence.data
 
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.ui.Modifier
@@ -9,7 +11,8 @@ import com.idzcasey.wavesofsilence.composables.CurrentlyPlaying
 import com.idzcasey.wavesofsilence.composables.HeaderComposable
 import com.idzcasey.wavesofsilence.composables.PlayPauseIcon
 import com.idzcasey.wavesofsilence.composables.LibraryCategory
-import com.idzcasey.wavesofsilence.composables.SoundSlider
+import com.idzcasey.wavesofsilence.composables.MixesRow
+import com.idzcasey.wavesofsilence.presenters.MixesPresenter
 
 interface ViewDataModel {
     fun stableKey(): String
@@ -34,7 +37,7 @@ data class AudioSliderData(
 
 @Immutable
 data class HeaderData(
-    val text: String
+    val text: String = String()
 ) : ViewDataModel {
     override fun stableKey(): String = "Header_$text"
 
@@ -46,8 +49,8 @@ data class HeaderData(
 
 @Immutable
 data class PlayPauseData(
-    val icon: ImageVector,
-    val onClick: () -> Unit
+    val icon: ImageVector = Icons.Default.PlayArrow,
+    val onClick: () -> Unit = {}
 ) : ViewDataModel {
 
     override fun stableKey(): String = "PlayPause"
@@ -73,28 +76,28 @@ data class LibraryCategoryData(
 }
 
 @Immutable
-data class SoundSliderData(
-    val name: String,
-    val volume: Float,
-    val onValueChange: (Float) -> Unit
-) : ViewDataModel {
-    override fun stableKey(): String = "Slider_$name"
-
-    @Composable
-    override fun Render(data: ViewDataModel, modifier: Modifier) {
-        SoundSlider(data as SoundSliderData, modifier = modifier)
-    }
-}
-
-@Immutable
 data class CurrentlyPlayingData(
-    val sounds: List<AudioSliderData>,
-    val playPauseData: PlayPauseData
+    val title: String? = null,
+    val sounds: List<AudioSliderData> = emptyList(),
+    val playPauseData: PlayPauseData = PlayPauseData()
 ) : ViewDataModel {
     override fun stableKey(): String = "CurrentlyPlayingBar"
 
     @Composable
     override fun Render(data: ViewDataModel, modifier: Modifier) {
         CurrentlyPlaying(data as CurrentlyPlayingData, modifier)
+    }
+}
+
+@Immutable
+data class MixesRowData(
+    val playPauseData: PlayPauseData,
+    val name: String = String()
+) : ViewDataModel {
+    override fun stableKey(): String = "MixesRow $name"
+
+    @Composable
+    override fun Render(data: ViewDataModel, modifier: Modifier) {
+        MixesRow(data as MixesRowData, modifier)
     }
 }

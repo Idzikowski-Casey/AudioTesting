@@ -1,6 +1,6 @@
 package com.idzcasey.wavesofsilence.database
 
-val mixes: List<SoundSourceMix> = listOf(
+val Mixes: List<SoundSourceMix> = listOf(
     SoundSourceMix(
         id = "MIXRAINFOREST",
         name = "Rainforest vibes",

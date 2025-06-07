@@ -25,4 +25,9 @@ abstract class PresenterModule {
     @IntoMap
     @ScreenModelKey(AllSoundsPresenter::class)
     abstract fun bindsAllSoundsScreenModel(allSoundsScreenModel: AllSoundsPresenter): ScreenModel
+
+    @Binds
+    @IntoMap
+    @ScreenModelKey(MixesPresenter::class)
+    abstract fun bindsMixesScreenModel(mixesScreenModel: MixesPresenter): ScreenModel
 }
