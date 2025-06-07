@@ -69,6 +69,7 @@ private fun CurrentlyPlayingRow(
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         CurrentlyPlayingTitles(
+            data.title,
             data.sounds.map { it.name },
             modifier = Modifier.weight(0.5f)
         )
@@ -82,20 +83,29 @@ private fun CurrentlyPlayingRow(
 
 @Composable
 fun CurrentlyPlayingTitles(
+    title: String?,
     items: List<String>,
     modifier: Modifier = Modifier,
 ) {
     val fullText = items.joinToString("   •   ")
 
-    Row(
-        modifier = modifier.basicMarquee(iterations = Int.MAX_VALUE, velocity = 40.dp)
-    ) {
-        Text(
-            text = fullText,
-            style = MaterialTheme.typography.bodyMedium,
-            maxLines = 1,
-            softWrap = false
-        )
+    Column(modifier) {
+        title?.let {
+            Text(
+                text = it,
+                style = MaterialTheme.typography.titleMedium
+            )
+        }
+        Row(
+            modifier = Modifier.basicMarquee(iterations = Int.MAX_VALUE, velocity = 40.dp)
+        ) {
+            Text(
+                text = fullText,
+                style = MaterialTheme.typography.bodyMedium,
+                maxLines = 1,
+                softWrap = false
+            )
+        }
     }
 }
 
@@ -113,39 +123,48 @@ private fun CurrentlyPlayingIcon(
 }
 
 
+private val previewData = CurrentlyPlayingData(
+    title = "Rainforest Vibes",
+    sounds = listOf(
+        AudioSliderData(
+            name = "Camp Fire",
+            volume = 0.5f,
+            onValueChange = {}
+        ),
+        AudioSliderData(
+            name = "Rain on Leaves",
+            volume = 0.5f,
+            onValueChange = {}
+        ),
+        AudioSliderData(
+            name = "Birds in Rainforest",
+            volume = 0.5f,
+            onValueChange = {}
+        ),
+        AudioSliderData(
+            name = "Frogs on Summer Night",
+            volume = 0.5f,
+            onValueChange = {}
+        )
+    ),
+    playPauseData = PlayPauseData(
+        icon = Icons.Default.PlayArrow,
+        onClick = {}
+    )
+)
+
 @Preview
 @Composable
 private fun CurrentlyPlayingCollapsedPreview() {
-    val data = CurrentlyPlayingData(
-        sounds = listOf(
-            AudioSliderData(
-                name = "Camp Fire",
-                volume = 0.5f,
-                onValueChange = {}
-            ),
-            AudioSliderData(
-                name = "Rain on Leaves",
-                volume = 0.5f,
-                onValueChange = {}
-            ),
-            AudioSliderData(
-                name = "Birds in Rainforest",
-                volume = 0.5f,
-                onValueChange = {}
-            ),
-            AudioSliderData(
-                name = "Frogs on Summer Night",
-                volume = 0.5f,
-                onValueChange = {}
-            )
-        ),
-        playPauseData = PlayPauseData(
-            icon = Icons.Default.PlayArrow,
-            onClick = {}
-        )
-    )
-
     AudioTestingTheme {
-        CurrentlyPlaying(data)
+        CurrentlyPlaying(previewData)
+    }
+}
+
+@Preview
+@Composable
+private fun CurrentlyPlayingCollapsedPreviewNoTitle() {
+    AudioTestingTheme {
+        CurrentlyPlaying(previewData.copy(title = null))
     }
 }

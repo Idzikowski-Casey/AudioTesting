@@ -4,7 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import com.idzcasey.wavesofsilence.audio.AudioPlayer
-import com.idzcasey.wavesofsilence.data.SoundSliderData
+import com.idzcasey.wavesofsilence.data.AudioSliderData
 import com.idzcasey.wavesofsilence.data.ViewDataModel
 import javax.inject.Inject
 
@@ -18,7 +18,7 @@ class AllSoundsPresenter @Inject constructor(
         val soundSources by audioPlayer.soundSources.collectAsState()
 
         return soundSources.map {
-            SoundSliderData(
+            AudioSliderData(
                 name = it.value.name,
                 volume = it.value.volume,
                 onValueChange = { volume ->

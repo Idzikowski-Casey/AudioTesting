@@ -53,8 +53,7 @@ fun AudioSliderPreview() {
         onValueChange = {}
     )
     AudioTestingTheme(
-        darkTheme = false,
-        dynamicColor = false
+        darkTheme = false
     ) {
         AudioSlider(data)
     }

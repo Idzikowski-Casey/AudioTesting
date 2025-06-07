@@ -57,6 +57,7 @@ class CurrentlyPlayingPresenter @Inject constructor(
 
         return listOf(
             CurrentlyPlayingData(
+                title = getTitle(),
                 sounds = currentSources,
                 playPauseData = PlayPauseData(
                     icon = icon,
@@ -66,5 +67,17 @@ class CurrentlyPlayingPresenter @Inject constructor(
                 )
             )
         )
+    }
+
+    @Composable
+    private fun getTitle() : String? {
+        val currentlyPlayingMix by audioPlayer.currentlyPlayingMix.collectAsState()
+        val mixes = audioPlayer.mixes
+
+        return if (currentlyPlayingMix != null) {
+            mixes[currentlyPlayingMix]?.name
+        } else {
+            null
+        }
     }
 }
