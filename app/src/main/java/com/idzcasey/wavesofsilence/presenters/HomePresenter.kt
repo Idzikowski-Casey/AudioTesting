@@ -1,6 +1,8 @@
 package com.idzcasey.wavesofsilence.presenters
 
+import android.graphics.drawable.Icon
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Adjust
 import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.runtime.Composable
@@ -10,6 +12,7 @@ import androidx.compose.runtime.remember
 import com.idzcasey.wavesofsilence.audio.AudioPlayer
 import com.idzcasey.wavesofsilence.audio.PlayerState
 import com.idzcasey.wavesofsilence.data.AudioSliderData
+import com.idzcasey.wavesofsilence.data.AudioSliderStyle
 import com.idzcasey.wavesofsilence.data.HeaderData
 import com.idzcasey.wavesofsilence.data.PlayPauseData
 import com.idzcasey.wavesofsilence.data.ViewDataModel
@@ -59,7 +62,9 @@ class HomePresenter @Inject constructor(
                 AudioSliderData(
                     name = name,
                     volume = volume,
-                    onValueChange = onValueChange
+                    onValueChange = onValueChange,
+                    icon = Icons.Default.Adjust,
+                    style = AudioSliderStyle.EXPANDED_GRID
                 )
             }
     }

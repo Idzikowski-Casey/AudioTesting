@@ -1,6 +1,9 @@
 package com.idzcasey.wavesofsilence.data
 
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.VolumeUp
+import androidx.compose.material.icons.filled.Adjust
+import androidx.compose.material.icons.filled.Inbox
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
@@ -21,11 +24,18 @@ interface ViewDataModel {
     fun Render(data: ViewDataModel, modifier: Modifier = Modifier)
 }
 
+enum class AudioSliderStyle {
+    COMPACT_ROW,
+    EXPANDED_GRID
+}
+
 @Immutable
 data class AudioSliderData(
     val name: String,
     val volume: Float,
-    val onValueChange: (Float) -> Unit
+    val onValueChange: (Float) -> Unit,
+    val style: AudioSliderStyle = AudioSliderStyle.COMPACT_ROW,
+    val icon: ImageVector? = null
 ) : ViewDataModel {
     override fun stableKey(): String = "AudioSlider_$name"
 
